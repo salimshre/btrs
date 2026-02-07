@@ -1,0 +1,180 @@
+CREATE DATABASE BTRS
+
+
+CREATE TABLE Bus(
+    bus_id INT PRIMARY KEY,
+    bus_number VARCHAR(20),
+    total_seats INT,
+    bus_type VARCHAR(10)
+	);
+
+
+
+
+INSERT into Bus(bus_id,bus_number,total_seats,bus_type)
+	VALUES(1,'BA101',40,'AC');
+
+
+CREATE TABLE Route(
+	route_id INT PRIMARY KEY,
+	source VARCHAR(20),
+    destination VARCHAR(20),
+    distance INT
+    );
+
+
+ INSERT INTO Route(route_id,source,destination,distance)
+	VALUES(1,'kathmandu','pokhara',200);
+
+
+CREATE TABLE Passenger(
+	passenger_id INT PRIMARY KEY,
+    name VARCHAR(20),
+    phone INT
+);
+
+INSERT INTO passenger(passenger_id,name,phone)
+	VALUES(1,'salim shrestha',9705550012);
+
+CREATE TABLE Schedule(
+	schedule_id INT PRIMARY KEY,
+	bus_id INT,
+    route_id INT,
+    departure_time TIME,
+    travel_date DATE,
+    
+    FOREIGN KEY (bus_id) REFERENCES Bus(bus_id),
+    FOREIGN KEY (route_id) REFERENCES Route(route_id)
+	);
+    
+ 
+
+INSERT INTO Schedule 
+(schedule_id, bus_id, route_id, departure_time, travel_date)
+VALUES 
+(1, 1, 1, '06:00:00', '2026-02-05');
+
+
+
+CREATE TABLE Ticket(
+	ticket_id INT PRIMARY KEY,
+	passenger_id INT,
+	schedule_id INT,
+	seat_number INT,
+	booking_date DATE,
+	status VARCHAR(20),
+    
+    FOREIGN KEY (passenger_id) REFERENCES Passenger(passenger_id),
+    FOREIGN KEY (schedule_id) REFERENCES Schedule(schedule_id)
+    );
+
+INSERT INTO ticket(ticket_id,passenger_id,schedule_id,seat_number, booking_date,status)
+	VALUES(1,1,1,1,'2026-02-05','book');
+
+
+SELECT * FROM bus
+WHERE bus_id=1;
+
+
+
+#what join is doing #basic example.
+SELECT passenger.name, ticket.seat_number
+FROM ticket
+JOIN passenger
+ON ticket.passenger_id = passenger.passenger_id;
+
+
+
+SELECT 
+    Passenger.name,
+    Bus.bus_number,
+    Route.source,
+    Route.destination,
+    Schedule.travel_date,
+    Schedule.departure_time,
+    Ticket.seat_number,
+    Ticket.status
+FROM Ticket
+JOIN Passenger ON Ticket.passenger_id = Passenger.passenger_id
+JOIN Schedule ON Ticket.schedule_id = Schedule.schedule_id
+JOIN Bus ON Schedule.bus_id = Bus.bus_id
+JOIN Route ON Schedule.route_id = Route.route_id;
+#########################################
+
+
+#made by me.
+SELECT bus.bus_number,bus.total_seats,
+		route.source, route.destination,
+        passenger.name, passenger.phone,
+        schedule.travel_date,
+        ticket.status, ticket.booking_date
+FROM ticket
+JOIN passenger ON passenger.passenger_id = ticket.passenger_id
+JOIN schedule ON schedule.schedule_id = ticket.schedule_id
+JOIN bus ON bus.bus_id = schedule.bus_id
+JOIN route ON route.route_id = schedule.route_id;
+
+#########################################
+#sheulde id 1 and status book are only displayed on it.
+#Count booked seats
+SELECT COUNT(*) AS booked_seats
+FROM Ticket
+WHERE schedule_id = 1
+AND status = 'book';
+
+
+#Find remaining seats
+SELECT 
+    Bus.total_seats - COUNT(Ticket.ticket_id) AS available_seats
+FROM Schedule
+JOIN Bus ON Schedule.bus_id = Bus.bus_id
+LEFT JOIN Ticket ON Schedule.schedule_id = Ticket.schedule_id
+AND Ticket.status = 'book'
+WHERE Schedule.schedule_id = 1
+GROUP BY Bus.total_seats;
+
+
+
+✅ 3. CANCEL TICKET QUERY
+Instead of deleting (good DB practice), update status:
+
+UPDATE Ticket
+SET status = 'book'
+WHERE ticket_id = 1;
+
+
+
+
+✅ 4. SHOW ONLY ACTIVE BOOKINGS
+SELECT * 
+FROM Ticket 
+WHERE status = 'book';
+
+
+
+✅ 5. FIND BUSES ON A ROUTE & DATE
+SELECT Bus.bus_number, schedule.departure_time
+FROM schedule
+JOIN bus ON schedule.bus_id = bus.bus_id 
+WHERE
+schedule.schedule_id = 1 AND schedule.travel_date = '2026-02-05';
+
+
+📌 OPTIONAL (nice for project)
+Total tickets per schedule
+SELECT schedule_id, COUNT(*) AS total_bookings
+FROM Ticket
+GROUP BY schedule_id;
+
+
+########################
+ALTER TABLE ticket DROP PRIMARY KEY;
+
+
+ALTER TABLE ticket 
+MODIFY ticket_id INT AUTO_INCREMENT PRIMARY KEY;
+
+########################
+#now to add login on passenger.
+ALTER TABLE passenger ADD password VARCHAR(100);
+
