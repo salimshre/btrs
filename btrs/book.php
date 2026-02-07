@@ -1,11 +1,18 @@
 <?php
+
+session_start();
+if(!isset($_SESSION['passenger_id'])){
+    header("Location: login.html");
+    exit();
+}
+
 $conn = mysqli_connect("localhost","root","","btrs");
 
 if(!$conn){
     die("Connection failed");
 }
 
-$passenger = $_GET['Passenger_id'];
+$passenger = $_SESSION['passenger_id'];
 $schedule  = $_GET['Schedule_id'];
 $seat      = $_GET['Seat_number'];
 
@@ -38,5 +45,5 @@ $sql = "INSERT INTO Ticket
 VALUES ($passenger, $schedule, $seat, CURDATE(), 'book')";
 mysqli_query($conn, $sql);
 
-echo "Ticket booked successfully! <a href='booking.html'> Book another </a> ";
+echo "Ticket booked successfully! <a href='booking.php'> Book another </a> ";
 ?>
