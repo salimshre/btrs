@@ -31,8 +31,16 @@ while($row = mysqli_fetch_assoc($result)){
 <h2> select seat </h2>
 
 
+
 <?php
-$total_seats = 40;
+
+$busSeatsSql = "SELECT bus.total_seats FROM schedule
+JOIN bus ON schedule.bus_id = bus.bus_id
+WHERE schedule.schedule_id = $schedule_id";
+$seatResult = mysqli_query($conn, $busSeatsSql);
+$seatRow = mysqli_fetch_assoc($seatResult);
+$total_seats = $seatRow['total_seats'];
+
 
 for($seat = 1; $seat <= $total_seats; $seat++){ 
 

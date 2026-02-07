@@ -174,3 +174,57 @@ ALTER TABLE ticket DROP PRIMARY KEY;
 ALTER TABLE ticket 
 MODIFY ticket_id INT AUTO_INCREMENT PRIMARY KEY;
 
+########################
+#now to add login on passenger.
+ALTER TABLE passenger ADD password VARCHAR(100);
+
+
+CREATE TABLE admin (
+    admin_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50),
+    password VARCHAR(50)
+);
+
+INSERT INTO admin (username, password)
+VALUES ('admin', '1234');
+
+########################
+
+ALTER TABLE bus DROP PRIMARY KEY;
+
+ALTER TABLE bus
+MODIFY bus_id INT AUTO_INCREMENT PRIMARY KEY;
+
+
+####to find constraint name
+SELECT 
+  TABLE_NAME, 
+  COLUMN_NAME, 
+  CONSTRAINT_NAME, 
+  REFERENCED_TABLE_NAME, 
+  REFERENCED_COLUMN_NAME
+FROM information_schema.KEY_COLUMN_USAGE
+WHERE TABLE_SCHEMA = 'btrs'
+AND TABLE_NAME = 'schedule'
+AND REFERENCED_TABLE_NAME IS NOT NULL;
+#####
+
+✅ Correct way to fix “multiple primary key” + foreign key error
+#STEP 1 — Temporarily drop FK from schedule
+Run this:
+
+ALTER TABLE schedule DROP FOREIGN KEY schedule_ibfk_1;
+#STEP 2 — Fix bus table (make bus_id AUTO_INCREMENT primary key)
+ALTER TABLE bus 
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (bus_id);
+
+ALTER TABLE bus 
+MODIFY bus_id INT NOT NULL AUTO_INCREMENT;
+#STEP 3 — Re‑add foreign key properly
+ALTER TABLE schedule
+ADD CONSTRAINT schedule_ibfk_1
+FOREIGN KEY (bus_id) REFERENCES bus(bus_id);
+
+########################
+
