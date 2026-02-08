@@ -237,7 +237,8 @@ ALTER TABLE route ADD UNIQUE(source, destination);
 ALTER TABLE schedule DROP FOREIGN KEY schedule_ibfk_2;
 
 ###
-ALTER TABLE route DROP PRIMARY KEY;
+ALTER TABLE route 
+DROP PRIMARY KEY;
 
 ALTER TABLE route MODIFY route_id INT NOT NULL;
 
@@ -251,3 +252,38 @@ ALTER TABLE schedule
 ADD CONSTRAINT schedule_ibfk_2
 FOREIGN KEY (route_id) REFERENCES route(route_id);
 ########################
+ALTER TABLE ticket DROP FOREIGN KEY ticket_ibfk_2;
+###
+ALTER TABLE schedule 
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (schedule_id);
+
+ALTER TABLE schedule 
+MODIFY schedule_id INT AUTO_INCREMENT;
+###
+
+ALTER TABLE ticket
+ADD CONSTRAINT ticket_ibfk_2
+FOREIGN KEY (schedule_id) REFERENCES schedule(schedule_id);
+
+########################
+ALTER TABLE ticket DROP FOREIGN KEY ticket_ibfk_1;
+##
+ALTER TABLE passenger 
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (passenger_id);
+
+ALTER TABLE passenger 
+MODIFY passenger_id INT AUTO_INCREMENT;
+##
+ALTER TABLE ticket
+ADD CONSTRAINT ticket_ibfk_1
+FOREIGN KEY (passenger_id) REFERENCES passenger(passenger_id);
+
+##
+########################
+ALTER TABLE passenger 
+MODIFY phone VARCHAR(15);
+########################
+
+

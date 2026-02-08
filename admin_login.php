@@ -14,7 +14,7 @@ $sql = "SELECT username, password FROM admin WHERE username='$username' AND pass
 $result = mysqli_query($conn, $sql);
 
 if(mysqli_num_rows($result) == 1){
-	$_SESSION['admin'] = $user;
+	$_SESSION['admin'] = $username;
 	header("location: admin_dashboard.php");
 } else {
 	echo "admin login failed";

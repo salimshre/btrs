@@ -16,6 +16,17 @@ $passenger = $_SESSION['passenger_id'];
 $schedule  = $_GET['Schedule_id'];
 $seat      = $_GET['Seat_number'];
 
+//i added for security // ❌ Anything fake is rejected
+$busSeatsSql = "SELECT bus.total_seats FROM schedule
+JOIN bus ON schedule.bus_id = bus.bus_id
+WHERE schedule.schedule_id = $schedule";
+$seatResult = mysqli_query($conn, $busSeatsSql);
+$seatRow = mysqli_fetch_assoc($seatResult);
+$total_seats = $seatRow['total_seats'];
+if($seat < 1 || $seat > $total_seats){
+    exit("Invalid seat number!");
+}
+
 $checkPassenger = "SELECT passenger_id FROM Passenger WHERE passenger_id = $passenger";
 $pResult = mysqli_query($conn, $checkPassenger);
 if(mysqli_num_rows($pResult) == 0){
