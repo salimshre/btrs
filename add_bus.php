@@ -14,17 +14,26 @@ if(!$conn){
 }
 
 
-if(){
+if(isset($_GET['add_bus'])){
 
+	$bus_number = $_GET['bus_number'];
+	$total_seats = $_GET['total_seats'];
 
+	$check ="SELECT bus_number, total_seats FROM bus WHERE bus_number='$bus_number' AND total_seats = $total_seats";
+	$res = mysqli_query($conn, $check);
 
-	$sql = "INSERT INTO bus(bus_number,total_seats)
-	VALUES(23,40);"
+	if(mysqli_num_rows($res) > 0){
+        echo "Bus already exists!";
+    } else {
+        $sql = "INSERT INTO bus(bus_number, total_seats)
+                VALUES('$bus_number', $total_seats)";
+        mysqli_query($conn, $sql);
+        echo "Bus added successfully!";
+    }
 }
 
-
-
 ?>
+
 
 <!DOCTYPE html>
 <header>
