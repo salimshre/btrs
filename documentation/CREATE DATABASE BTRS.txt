@@ -214,6 +214,7 @@ AND REFERENCED_TABLE_NAME IS NOT NULL;
 Run this:
 
 ALTER TABLE schedule DROP FOREIGN KEY schedule_ibfk_1;
+
 #STEP 2 — Fix bus table (make bus_id AUTO_INCREMENT primary key)
 ALTER TABLE bus 
 DROP PRIMARY KEY,
@@ -221,10 +222,32 @@ ADD PRIMARY KEY (bus_id);
 
 ALTER TABLE bus 
 MODIFY bus_id INT NOT NULL AUTO_INCREMENT;
+
 #STEP 3 — Re‑add foreign key properly
 ALTER TABLE schedule
 ADD CONSTRAINT schedule_ibfk_1
 FOREIGN KEY (bus_id) REFERENCES bus(bus_id);
 
 ########################
+####to prevent duplicate
+ALTER TABLE route ADD UNIQUE(source, destination);
 
+########################
+
+ALTER TABLE schedule DROP FOREIGN KEY schedule_ibfk_2;
+
+###
+ALTER TABLE route DROP PRIMARY KEY;
+
+ALTER TABLE route MODIFY route_id INT NOT NULL;
+
+UPDATE route SET route_id = NULL;
+
+ALTER TABLE route 
+MODIFY route_id INT AUTO_INCREMENT PRIMARY KEY;
+
+###
+ALTER TABLE schedule
+ADD CONSTRAINT schedule_ibfk_2
+FOREIGN KEY (route_id) REFERENCES route(route_id);
+########################
