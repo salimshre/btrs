@@ -1,26 +1,23 @@
 <?php
-// if passenger session is not then will regirect to login.
 session_start();
 if(!isset($_SESSION['passenger_id'])){
     header("Location: login.html");
     exit();
 }
 
+$conn = mysqli_connect("sql301.infinityfree.com", "if0_42399722", "ebAupTZ7WdjlWwI", "if0_42399722_btrs");
 
-$conn = mysqli_connect('localhost','root','','btrs');
-if (!$conn){
-    die("connection failed");
+if (mysqli_connect_error()) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
 $passenger = $_SESSION['passenger_id'];
 $schedule_id = $_GET['schedule_id'];
 
-
 $sql = "SELECT seat_number FROM ticket
         WHERE schedule_id = $schedule_id AND status = 'book'";
 
 $result = mysqli_query($conn, $sql);
-
 $booked = [];
 
 while($row = mysqli_fetch_assoc($result)){
@@ -30,10 +27,7 @@ while($row = mysqli_fetch_assoc($result)){
 
 <h2> select seat </h2>
 
-
-
 <?php
-
 $busSeatsSql = "SELECT bus.total_seats FROM schedule
 JOIN bus ON schedule.bus_id = bus.bus_id
 WHERE schedule.schedule_id = $schedule_id";
@@ -41,10 +35,9 @@ $seatResult = mysqli_query($conn, $busSeatsSql);
 $seatRow = mysqli_fetch_assoc($seatResult);
 $total_seats = $seatRow['total_seats'];
 
-
 for($seat = 1; $seat <= $total_seats; $seat++){ 
 
-    if(in_array($seat, $booked)){ // in_array(value, array) //in_array(5, [2,5,7,12])
+    if(in_array($seat, $booked)){
         echo "<button disabled style='background:red;color:white;margin:5px'>
               Seat $seat (Booked)
               </button>";
@@ -54,10 +47,8 @@ for($seat = 1; $seat <= $total_seats; $seat++){
       Seat $seat (Free)
       </button>
       </a>";
-
     }
 
-    if($seat % 4 == 0) echo "<br>"; // new row like bus seats
+    if($seat % 4 == 0) echo "<br>";
 }
-
 ?>

@@ -7,22 +7,21 @@ if(!isset($_SESSION['admin'])){
 }
 */
 
-$conn = mysqli_connect('localhost','root','','btrs');
+$conn = mysqli_connect("sql301.infinityfree.com", "if0_42399722", "ebAupTZ7WdjlWwI", "if0_42399722_btrs");
 
-if(!$conn){
-    die("Connection failed");
+if (mysqli_connect_error()) {
+    die("Connection failed: " . mysqli_connect_error());
 }
-
 
 if(isset($_GET['add_bus'])){
 
-	$bus_number = $_GET['bus_number'];
-	$total_seats = $_GET['total_seats'];
+    $bus_number = $_GET['bus_number'];
+    $total_seats = $_GET['total_seats'];
 
-	$check ="SELECT bus_number, total_seats FROM bus WHERE bus_number='$bus_number' AND total_seats = $total_seats";
-	$res = mysqli_query($conn, $check);
+    $check ="SELECT bus_number, total_seats FROM bus WHERE bus_number='$bus_number' AND total_seats = $total_seats";
+    $res = mysqli_query($conn, $check);
 
-	if(mysqli_num_rows($res) > 0){
+    if(mysqli_num_rows($res) > 0){
         echo "Bus already exists!";
     } else {
         $sql = "INSERT INTO bus(bus_number, total_seats)
@@ -31,27 +30,19 @@ if(isset($_GET['add_bus'])){
         echo "Bus added successfully!";
     }
 }
-
 ?>
-
-
 <!DOCTYPE html>
 <header>
     <title>Add Bus</title>
 </header>
 <body>
-
 <h2>Add New Bus</h2>
-
 <form method="GET">
     Bus Number:
     <input type="text" name="bus_number" required><br><br>
-
     Total Seats:
     <input type="number" name="total_seats" required><br><br>
-
     <button type="submit" name="add_bus">Add Bus</button>
 </form>
-
 </body>
 </html>

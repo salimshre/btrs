@@ -1,24 +1,22 @@
 <?php
 session_start();
 
-$conn = mysqli_connect('localhost','root','','btrs');
-if(!$conn){
-    die("Connection failed");
+$conn = mysqli_connect("sql301.infinityfree.com", "if0_42399722", "ebAupTZ7WdjlWwI", "if0_42399722_btrs");
+
+if (mysqli_connect_error()) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
 $busRes = mysqli_query($conn, 'SELECT bus_id, bus_number FROM bus');
 $routeRes = mysqli_query($conn, 'SELECT route_id, source, destination FROM route');
 
-
 if(isset($_GET['add_schedule'])){
-
 
     $bus_id = $_GET['bus_id'];
     $route_id = $_GET['route_id'];
     $departure_time = $_GET['departure_time'];
     $travel_date = $_GET['travel_date'];
 
-    
     $check = "SELECT * FROM schedule 
               WHERE bus_id=$bus_id 
               AND route_id=$route_id 
@@ -39,16 +37,13 @@ if(isset($_GET['add_schedule'])){
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Add Schedule</title>
 </head>
 <body>
-
 <h2>Add New Schedule</h2>
-
 <form method="GET">
     Bus:
     <select name="bus_id" required>
@@ -60,27 +55,21 @@ if(isset($_GET['add_schedule'])){
         <?php } ?>
     </select>
     <br><br>
-
     Route:
-    <select name="route_id" required="">
+    <select name="route_id" required>
         <option value="" disabled selected>select route</option>
         <?php while($rRow = mysqli_fetch_assoc($routeRes)){?>
             <option value="<?php echo $rRow['route_id']; ?>">
                 <?php echo $rRow['source']; ?> → <?php echo $rRow['destination']; ?>
             </option>
         <?php } ?>
-        
     </select>
     <br><br>
-
     Departure Time:
     <input type="time" name="departure_time" required><br><br>
-
     Travel Date:
     <input type="date" name="travel_date" required><br><br>
-
     <button type="submit" name="add_schedule">Add Schedule</button>
 </form>
-
 </body>
 </html>

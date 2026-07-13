@@ -1,5 +1,9 @@
 <?php
-$conn = mysqli_connect('localhost','root','','btrs');
+$conn = mysqli_connect("sql301.infinityfree.com", "if0_42399722", "ebAupTZ7WdjlWwI", "if0_42399722_btrs");
+
+if (mysqli_connect_error()) {
+    die("Connection failed: " . mysqli_connect_error());
+}
 
 $sql = "SELECT schedule.schedule_id, route.source, route.destination, schedule.travel_date, schedule.departure_time, bus.bus_number, bus.total_seats
 FROM schedule
@@ -21,6 +25,4 @@ while($row = mysqli_fetch_assoc($result)){
     </div>
     ";
 }
-
-
 ?>

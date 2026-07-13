@@ -1,9 +1,10 @@
 <?php
 session_start();
-$conn = mysqli_connect('localhost','root','','btrs');
 
-if(!$conn){
-	die("connection die");
+$conn = mysqli_connect("sql301.infinityfree.com", "if0_42399722", "ebAupTZ7WdjlWwI", "if0_42399722_btrs");
+
+if (mysqli_connect_error()) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
 $username = $_GET['username'];
@@ -14,11 +15,9 @@ $sql = "SELECT username, password FROM admin WHERE username='$username' AND pass
 $result = mysqli_query($conn, $sql);
 
 if(mysqli_num_rows($result) == 1){
-	$_SESSION['admin'] = $username;
-	header("location: admin_dashboard.php");
+    $_SESSION['admin'] = $username;
+    header("location: admin_dashboard.php");
 } else {
-	echo "admin login failed";
+    echo "admin login failed";
 }
-
 ?>
-

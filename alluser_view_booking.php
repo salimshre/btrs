@@ -1,10 +1,9 @@
 <?php
-$conn = mysqli_connect("localhost","root","","btrs");
+$conn = mysqli_connect("sql301.infinityfree.com", "if0_42399722", "ebAupTZ7WdjlWwI", "if0_42399722_btrs");
 
-if(!$conn){
-	die("connection failed");
+if (mysqli_connect_error()) {
+    die("Connection failed: " . mysqli_connect_error());
 }
-
 
 $sql = "SELECT passenger.name, passenger.phone, bus.bus_number, bus.total_seats, route.source, route.destination, route.distance, ticket.seat_number, ticket.booking_date, ticket.status, schedule.departure_time, schedule.travel_date FROM schedule
 JOIN bus ON schedule.bus_id = bus.bus_id
@@ -28,5 +27,4 @@ while($row = mysqli_fetch_assoc($result)){
     </ul>
     ";
 }
-
 ?>

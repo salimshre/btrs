@@ -1,22 +1,21 @@
 <?php
-
 session_start();
 if(!isset($_SESSION['passenger_id'])){
     header("Location: login.html");
     exit();
 }
 
-$conn = mysqli_connect("localhost","root","","btrs");
+$conn = mysqli_connect("sql301.infinityfree.com", "if0_42399722", "ebAupTZ7WdjlWwI", "if0_42399722_btrs");
 
-if(!$conn){
-    die("Connection failed");
+if (mysqli_connect_error()) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
 $passenger = $_SESSION['passenger_id'];
 $schedule  = $_GET['Schedule_id'];
 $seat      = $_GET['Seat_number'];
 
-//i added for security // ❌ Anything fake is rejected
+// Security: validate seat number
 $busSeatsSql = "SELECT bus.total_seats FROM schedule
 JOIN bus ON schedule.bus_id = bus.bus_id
 WHERE schedule.schedule_id = $schedule";

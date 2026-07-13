@@ -1,8 +1,10 @@
 <?php
 session_start();
-$conn = mysqli_connect('localhost','root','','btrs');
-if(!$conn){
-    die("no connection");
+
+$conn = mysqli_connect("sql301.infinityfree.com", "if0_42399722", "ebAupTZ7WdjlWwI", "if0_42399722_btrs");
+
+if (mysqli_connect_error()) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
 $phone = $_GET['phone'];
@@ -16,12 +18,9 @@ $sql = "SELECT passenger_id
 $result = mysqli_query($conn, $sql);
 
 if(mysqli_num_rows($result) == 1){
-
-    $row = mysqli_fetch_assoc($result);   // get passenger row
-    $_SESSION['passenger_id'] = $row['passenger_id'];  // store ID
-
+    $row = mysqli_fetch_assoc($result);
+    $_SESSION['passenger_id'] = $row['passenger_id'];
     header('location: booking.php');
-
 } else {
     echo "Login failed!";
 }
